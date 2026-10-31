@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # --- PHP Backend & Apache Web Server ---
+  web:
+    image: php:8.2-apache
+    container_name: wamp_web_server
+    ports:
+      - "80:80"
+    volumes:
+      - ./public:/var/www/html
+    restart: always
+    depends_on:
+      - db
+
+  # --- MySQL Database ---
+  db:
+    image: mysql:8.0
+    container_name: wamp_database
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: my_local_db
+      MYSQL_USER: dev_user
+      MYSQL_PASSWORD: dev_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  # --- phpMyAdmin (Database Management Tool) ---
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: wamp_phpmyadmin
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+    depends_on:
+      - db
+
+volumes:
+  db_data:
