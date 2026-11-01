@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>TP02 - Site B</title>
+</head>
+<body>
+
+    <h1>Site B - Test SOP</h1>
+
+    <button onclick="testAPI()">
+        Appeler l'API de Site A
+    </button>
+
+    <h2>Résultat :</h2>
+    <pre id="result">En attente...</pre>
+
+    <script>
+        async function testAPI() {
+            const result = document.getElementById("result");
+
+            try {
+                const response = await fetch(
+                    "http://127.0.0.1:8080/api.php",
+                    {
+                        method: "GET",
+                        headers: {
+                            "X-TP-Lab": "test"
+                        }
+                    }
+                );
+
+                const data = await response.json();
+
+                result.textContent = JSON.stringify(data, null, 2);
+
+            } catch (error) {
+                result.textContent = "Erreur : " + error.message;
+                console.error(error);
+            }
+        }
+    </script>
+
+</body>
+</html>

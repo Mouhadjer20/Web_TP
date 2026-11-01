@@ -1,19 +1,28 @@
-version: '3.8'
 
 services:
-  # --- PHP Backend & Apache Web Server ---
+  # Site A : TP1 + exercices PHP du TP2
   web:
     image: php:8.2-apache
     container_name: wamp_web_server
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
       - ./public:/var/www/html
     restart: always
     depends_on:
       - db
 
-  # --- MySQL Database ---
+  # Site B : HTML / JavaScript
+  site-b:
+    image: nginx:alpine
+    container_name: tp2_site_b
+    ports:
+      - "8081:80"
+    volumes:
+      - ./site-b:/usr/share/nginx/html:ro
+    restart: always
+
+  # Base de données MySQL du TP1
   db:
     image: mysql:8.0
     container_name: wamp_database
@@ -28,13 +37,13 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
-  # --- phpMyAdmin (Database Management Tool) ---
+  # phpMyAdmin
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     container_name: wamp_phpmyadmin
     restart: always
     ports:
-      - "8081:80"
+      - "8082:80"
     environment:
       PMA_HOST: db
     depends_on:
