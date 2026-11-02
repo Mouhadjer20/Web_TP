@@ -1,12 +1,13 @@
 <?php
 // Configuration du cookie de session AVANT session_start()
 ini_set("session.use_strict_mode", "1");
+ini_set("session.cookie_httponly", "1");
 
 session_set_cookie_params([
     "lifetime" => 0,
     "path" => "/",
-    "secure" => false, // HTTP uniquement pour notre TP local
-    "httponly" => true,
+    "secure" => false, // HTTP uniquement pour notre TP local (mettre true en production avec HTTPS)
+    "httponly" => true, // Empêche l'accès au cookie via JavaScript (protection XSS)
     "samesite" => "Lax"
 ]);
 
@@ -21,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if ($username === "etudiant" && $password === "tp2026") {
 
-        // Renouveler l'identifiant de session après connexion
+        // Renouveler l'identifiant de session après connexion pour prévenir la fixation de session
         session_regenerate_id(true);
 
         $_SESSION["user"] = $username;
